@@ -1,8 +1,9 @@
 package testbase;
 
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
 import utilities.PropertiesReader;
 import utilities.WebDriverManagerUtil;
 
@@ -14,17 +15,17 @@ public class TestBase {
     protected WebDriver driver;
     Properties properties = new PropertiesReader().getPropValues("data.properties");
 
-    @BeforeMethod
-    public void setUp(){
-        driver = WebDriverManagerUtil.createWebDriver("chrome");
+    @BeforeTest
+    @Parameters({"browser"})
+    public void setUp(String browserType){
+        driver = WebDriverManagerUtil.createWebDriver(browserType);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get(properties.getProperty("BaseURL"));
     }
 
-    @AfterMethod
+    @AfterTest
     public void tearDown(){
-        driver.close();
         driver.quit();
     }
 
